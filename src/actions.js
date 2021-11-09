@@ -1,10 +1,9 @@
 import { firebaseApp } from './firebase'
-import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
+import { getFirestore, collection, getDocs, addDoc } from 'firebase/firestore/lite';
 
 const db = getFirestore(firebaseApp)
 
 export const getCollection = async(collectionParam) => {
-    debugger;
     const result = { statusResponse: false, data: null, error: null }
     try {
         const collec = collection(db, collectionParam)
@@ -13,6 +12,21 @@ export const getCollection = async(collectionParam) => {
 
         result.statusResponse = true
         result.data = collecList
+    } catch (error) {
+        result.error = error
+    }
+
+    return result
+}
+
+export const addDocument = async(collectionParam, data) => {
+    const result = { statusResponse: false, data: null, error: null }
+    try {
+        const collec = collection(db, collectionParam)
+        const response = await addDoc(collec, data)
+
+        result.statusResponse = true
+        result.data = { id: response.id }
     } catch (error) {
         result.error = error
     }
